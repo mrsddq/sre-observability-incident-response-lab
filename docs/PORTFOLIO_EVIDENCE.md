@@ -27,6 +27,8 @@ synthetic check configuration is valid
 | SLO | `slo/demo-api.yaml` | Availability and latency objectives with error-budget policy. |
 | Runbooks | `runbooks/` | High-error and high-latency incident response. |
 | RCA templates | `incidents/templates/` | Post-incident learning process. |
+| Docker Smoke | `.github/workflows/docker-smoke.yml` | Container build and in-container import/metrics checks. |
+| Security scan | `.github/workflows/ci.yml` | Trivy config scan runs in CI. |
 
 ## Screenshots And Proof To Capture
 

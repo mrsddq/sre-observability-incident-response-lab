@@ -8,6 +8,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -15,3 +17,13 @@ jobs:
           python-version: "3.12"
       - name: Run tests
         run: make validate
+
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy config scan
+        run: |
+          docker run --rm -v "${{ github.workspace }}:/workspace" aquasec/trivy:latest config /workspace --exit-code 0 --severity HIGH,CRITICAL
