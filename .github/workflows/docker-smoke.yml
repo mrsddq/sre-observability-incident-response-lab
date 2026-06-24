@@ -1,0 +1,31 @@
+name: Docker Smoke
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - services/api/**
+      - docker-compose.yml
+      - .github/workflows/docker-smoke.yml
+  push:
+    branches: [main]
+    paths:
+      - services/api/**
+      - docker-compose.yml
+      - .github/workflows/docker-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  docker-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -t sre-demo-api:smoke -f services/api/Dockerfile services/api
+      - name: Compile API in container
+        run: docker run --rm sre-demo-api:smoke python -m py_compile app.py
+      - name: Render metrics in container
+        run: docker run --rm sre-demo-api:smoke python -c "from app import metrics_text; print(metrics_text())"
