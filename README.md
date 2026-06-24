@@ -62,6 +62,30 @@ docker compose up --build
 
 See [docs/PORTFOLIO_EVIDENCE.md](docs/PORTFOLIO_EVIDENCE.md) for validation commands, sample signals, and incident-response proof points.
 
+## Production Docs
+
+- [Architecture](docs/architecture.md)
+- [Runbook](docs/runbook.md)
+- [Incident response](docs/incident-response.md)
+- [Cost estimate](docs/cost-estimate.md)
+- [Security controls](docs/security-controls.md)
+
+## Make Targets
+
+```bash
+make test
+make lint
+make run
+make local-demo
+make security-scan
+make deploy
+make destroy
+```
+
+## Interview Story
+
+This project demonstrates practical SRE mechanics: service instrumentation, SLOs, alert rules, dashboards, synthetic checks, failure injection, runbooks, RCA templates, rollback paths and production improvement notes.
+
 ## What This Proves
 
 - Understands RED/USE observability signals

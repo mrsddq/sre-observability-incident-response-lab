@@ -27,3 +27,15 @@ synthetic check configuration is valid
 | SLO | `slo/demo-api.yaml` | Availability and latency objectives with error-budget policy. |
 | Runbooks | `runbooks/` | High-error and high-latency incident response. |
 | RCA templates | `incidents/templates/` | Post-incident learning process. |
+
+## Screenshots And Proof To Capture
+
+- GitHub Actions CI run.
+- `/healthz`, `/readyz`, `/work` and `/metrics` terminal output.
+- Prometheus targets page showing the demo API scrape.
+- Prometheus alert rule page for error rate or latency.
+- Grafana SLO dashboard.
+- Failure injection command output and corresponding alert/dashboard change.
+- Filled sample RCA using `incidents/templates/rca-template.md`.
+
+Do not reuse screenshots from unrelated services.
