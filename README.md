@@ -1,5 +1,7 @@
 # SRE Observability + Incident Response Lab
 
+[![CI](https://github.com/mrsddq/sre-observability-incident-response-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/mrsddq/sre-observability-incident-response-lab/actions/workflows/ci.yml)
+
 Hands-on SRE lab that demonstrates service instrumentation, SLOs, alerting, dashboards, synthetic checks, failure injection, runbooks, RCA templates, and Kubernetes deployment patterns.
 
 ## What This Builds
@@ -55,6 +57,10 @@ docker compose up --build
 - Error spike: call `/work?fail=true`
 - Readiness failure: set `FORCE_NOT_READY=true`
 - Saturation review: compare request rate, latency, and error budget burn
+
+## Portfolio Evidence
+
+See [docs/PORTFOLIO_EVIDENCE.md](docs/PORTFOLIO_EVIDENCE.md) for validation commands, sample signals, and incident-response proof points.
 
 ## What This Proves
 
