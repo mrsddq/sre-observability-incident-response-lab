@@ -1,0 +1,22 @@
+groups:
+  - name: demo-api-slo
+    rules:
+      - alert: DemoApiHighErrorRate
+        expr: rate(demo_api_errors_total[5m]) / clamp_min(rate(demo_api_requests_total[5m]), 0.001) > 0.02
+        for: 10m
+        labels:
+          severity: page
+          service: demo-api
+        annotations:
+          summary: Demo API error rate is above SLO.
+          runbook_url: runbooks/error-rate.md
+
+      - alert: DemoApiHighLatency
+        expr: histogram_quantile(0.95, rate(demo_api_request_duration_seconds_bucket[5m])) > 0.5
+        for: 10m
+        labels:
+          severity: ticket
+          service: demo-api
+        annotations:
+          summary: Demo API p95 latency is above 500 ms.
+          runbook_url: runbooks/high-latency.md

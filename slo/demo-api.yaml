@@ -1,0 +1,16 @@
+service: demo-api
+owner: platform-sre
+slos:
+  - name: availability
+    objective: 99.9
+    window: 30d
+    sli: successful_requests / total_requests
+    error_budget_policy:
+      page_when_burn_rate_above: 14
+      ticket_when_burn_rate_above: 6
+  - name: latency
+    objective: 95
+    window: 30d
+    sli: requests_under_500ms / total_requests
+    error_budget_policy:
+      ticket_when_burn_rate_above: 6

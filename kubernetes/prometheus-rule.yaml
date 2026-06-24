@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: demo-api-slo
+  namespace: sre-lab
+spec:
+  groups:
+    - name: demo-api
+      rules:
+        - alert: DemoApiHighErrorRate
+          expr: rate(demo_api_errors_total[5m]) / clamp_min(rate(demo_api_requests_total[5m]), 0.001) > 0.02
+          for: 10m
+          labels:
+            severity: page
+          annotations:
+            summary: Demo API error rate is above SLO.
