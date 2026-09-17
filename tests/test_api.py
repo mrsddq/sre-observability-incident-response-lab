@@ -1,6 +1,6 @@
 import unittest
 
-from services.api.app import ERROR_COUNT, REQUEST_COUNT, metrics_text, observe_request, reset_metrics
+from services.api.app import metrics_text, observe_request, reset_metrics
 
 
 class ApiMetricsTest(unittest.TestCase):

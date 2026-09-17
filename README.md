@@ -30,7 +30,7 @@ flowchart LR
 
 ## Local Demo
 
-Run the service:
+Requires Python 3.11+; the API and regression suite use only the standard library. Run the service:
 
 ```bash
 python services/api/app.py
@@ -92,4 +92,26 @@ This project demonstrates practical SRE mechanics: service instrumentation, SLOs
 - Can define SLOs and alert thresholds
 - Can build practical runbooks for incident response
 - Can reason about incident timelines, mitigation, and follow-up work
-- Can deploy and operate services on Kubernetes
+- Provides Kubernetes deployment references for a demo service
+
+## Measurement contract and boundaries
+
+The SLO metrics describe **accepted `/work` requests**. Health checks, readiness checks (including readiness failures), `/metrics` scrapes, unknown paths, and rejected input do not enter the request denominator or latency histogram. This prevents monitoring traffic from diluting the work error rate. A simulated `fail=true` request contributes one work request and one 5xx error. These are process-local counters and reset when the process restarts; Prometheus `rate()` handles counter resets.
+
+The histogram exports cumulative buckets, `_count`, and `_sum`. Observations update under one lock, and each scrape reads one consistent snapshot. Latency measures handler processing time, including injected delay, before response transmission; it is not client-observed network latency.
+
+`delay_ms` defaults to 25 and accepts a single integer in the inclusive range 0–10,000. Malformed, repeated, negative, or excessive values return JSON HTTP 400 without sleeping. This keeps failure injection bounded and avoids a disconnected socket on invalid input.
+
+```bash
+# A valid failure contributes to the work error rate.
+curl -i 'http://localhost:8000/work?delay_ms=0&fail=true'
+# Invalid input returns a structured 400 response.
+curl -i 'http://localhost:8000/work?delay_ms=oops'
+# Scrapes do not change the counters.
+curl 'http://localhost:8000/metrics'
+make validate
+```
+
+The tests start the actual threaded HTTP server on an ephemeral loopback port. They exercise HTTP success/failure, malformed requests, readiness failure, exclusion of probes from SLOs, concurrent requests, cumulative histogram boundaries, and coherent metric snapshots during concurrent writes. No containers, cluster, or cloud account are needed for these tests.
+
+This is an instrumentation and incident-response **lab**, not a production monitoring deployment. The checked-in alerts are sustained error-rate/p95 thresholds, not an implementation of the multi-window burn-rate policy in `slo/demo-api.yaml`. The Compose stack runs the API, Prometheus, and Grafana; dashboard import and Alertmanager routing require additional setup. Kubernetes manifests require a suitable cluster and, for `PrometheusRule`, the Prometheus Operator CRDs. No deployment is performed by `make validate`.
