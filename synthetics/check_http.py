@@ -14,7 +14,7 @@ def check(url: str, timeout: float) -> tuple[bool, float, int | None]:
     except urllib.error.HTTPError as exc:
       elapsed = time.monotonic() - started
       return False, elapsed, exc.code
-    except urllib.error.URLError:
+    except (urllib.error.URLError, TimeoutError):
       elapsed = time.monotonic() - started
       return False, elapsed, None
 
